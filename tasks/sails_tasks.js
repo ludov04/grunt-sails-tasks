@@ -15,7 +15,6 @@ module.exports = function(grunt) {
 
   grunt.registerMultiTask('sails_tasks', 'A grunt command to run 1 off tasks with sails', function() {
     var sails = require('sails');
-    var async = require('async');
     var asyncFn;
     var fns = this.data.functions;
     var done = this.async();
@@ -40,10 +39,7 @@ module.exports = function(grunt) {
     liftSails({
       port: -1,
       environment: this.options('env') || process.env.NODE_ENV,
-      tasks: true,
-      globals: {
-        async: false
-      }
+      tasks: true
     }, function (err, sails) {
 
       if (err) {
