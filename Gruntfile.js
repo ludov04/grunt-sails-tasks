@@ -40,6 +40,19 @@ module.exports = function(grunt) {
             callback();
           }
         ]
+      },
+      glory: {
+        series: true,
+        functions: [
+          function (cb) {
+            console.log('three');
+            cb();
+          },
+          function (cb) {
+            console.log('four');
+            cb();
+          }
+        ]
       }
     },
 
@@ -60,7 +73,7 @@ module.exports = function(grunt) {
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'sails_tasks', 'nodeunit']);
+  grunt.registerTask('test', ['clean', 'sails_tasks']);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);

@@ -25,61 +25,118 @@ In your project's Gruntfile, add a section named `sails_tasks` to the data objec
 ```js
 grunt.initConfig({
   sails_tasks: {
-    options: {
-      // Task-specific options go here.
-    },
     your_target: {
-      // Target-specific file lists and/or options go here.
+      functions: [ functionOne, functionTwo ]
     },
   },
 });
 ```
 
-### Options
+### Data
 
-#### options.separator
-Type: `String`
-Default value: `',  '`
+#### data.functions
+Type: `Array of functions`
+Required
 
-A string value that is used to do something with whatever.
+An array of functions to execute. The functions are executed using the (async)[https://github.com/caolan/async] framework, so each function should take one parameter that is a callback function.
 
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
+```js
+functions: [
+  function (callback) {
+    // do something
+    callback();
+  },
+  function (callback) {
+    // do something else
+    callback();
+  }
+]
 
-A string value that is used to do something else with whatever else.
+```
+
+#### data.series
+Type: `Boolean`
+Default value: `false`
+
+If `true`, `async.series` will be used to execute the functions. The default is `false`, in which case `async.parallel` will be used.
 
 ### Usage Examples
 
 #### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+We use this grunt task to do a number of things on each deployment. One of the things we do is seed data into the database. There are a number of repos out there that deal with seeding data for sails, but we needed slightly more flexibility, and opted to write our own code to seed the data.
 
 ```js
 grunt.initConfig({
   sails_tasks: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
+    seed: {
+      functions: [
+        function (callback) {
+          // Seed some config data
+          callback();
+        },
+        function (callback) {
+          // Seed some example data
+          callback();
+        }
+      ]
+    }
+  }
 });
 ```
 
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+This task will run this code like below, after lifting sails.
+
+```js
+async.parallel([
+  function (callback) {
+    // Seed some config data
+    callback();
+  },
+  function (callback) {
+    // Seed some example data
+    callback();
+  }
+], cb);
+```
+
+#### Series
+In some cases, you may want to run your functions in series, rather than in parallel. Note that it's nearly as easy to just create one function for the `sails_tasks` functions array that then calls the functions in series. This just removes the need to nest that one extra level.
 
 ```js
 grunt.initConfig({
   sails_tasks: {
     options: {
-      separator: ': ',
-      punctuation: ' !!!',
+      series: true
     },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
+    seed: {
+      functions: [
+        function (callback) {
+          // Seed some config data
+          callback();
+        },
+        function (callback) {
+          // Seed some example data
+          callback();
+        }
+      ]
+    }
+  }
 });
+```
+
+This task will run this code like below, after lifting sails.
+
+```js
+async.series([
+  function (callback) {
+    // Seed some config data
+    callback();
+  },
+  function (callback) {
+    // Seed some example data
+    callback();
+  }
+], cb);
 ```
 
 ## Contributing
