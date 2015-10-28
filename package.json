@@ -2,22 +2,22 @@
   "name": "grunt-sails-tasks",
   "description": "A grunt command to run 1 off tasks with sails",
   "version": "0.1.0",
-  "homepage": "https://github.com/tobalsgithub/grunt-sails-tasks",
+  "homepage": "https://github.com/100health/grunt-sails-tasks",
   "author": {
     "name": "TC",
     "email": "tobalsemail@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/tobalsgithub/grunt-sails-tasks.git"
+    "url": "git://github.com/100health/grunt-sails-tasks.git"
   },
   "bugs": {
-    "url": "https://github.com/tobalsgithub/grunt-sails-tasks/issues"
+    "url": "https://github.com/100health/grunt-sails-tasks/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/tobalsgithub/grunt-sails-tasks/blob/master/LICENSE-MIT"
+      "url": "https://github.com/100health/grunt-sails-tasks/blob/master/LICENSE-MIT"
     }
   ],
   "engines": {

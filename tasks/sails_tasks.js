@@ -8,20 +8,20 @@
 
 'use strict';
 
-var async = require('async');
-var sails = require('sails');
-
 module.exports = function(grunt) {
 
   // Please see the Grunt documentation for more information regarding task
   // creation: http://gruntjs.com/creating-tasks
 
   grunt.registerMultiTask('sails_tasks', 'A grunt command to run 1 off tasks with sails', function() {
+    var sails = require('sails');
+    var async = require('async');
     var asyncFn;
     var fns = this.data.functions;
     var done = this.async();
+    var series = this.data.series;
 
-    if (!fns) {
+    if (!fns || !fns.length) {
       return grunt.fail.fatal('Missing required field "functions"');
     }
 
@@ -29,21 +29,32 @@ module.exports = function(grunt) {
       fns = [fns];
     }
 
-    if (this.data.series) {
-      asyncFn = async.series;
-    } else {
-      asyncFn = async.parallel;
-    }
+    var liftSails = function (config, cb) {
+      if (sails.config) {
+        return cb();
+      }
 
-    sails.lift({
+      sails.lift(config, cb);
+    };
+
+    liftSails({
       port: -1,
       environment: this.options('env') || process.env.NODE_ENV,
-      tasks: true
-    }, function (err) {
+      tasks: true,
+      globals: {
+        async: false
+      }
+    }, function (err, sails) {
 
       if (err) {
         grunt.fail.fatal('Could not lift sails', err);
         return done();
+      }
+
+      if (series) {
+        asyncFn = async.series;
+      } else {
+        asyncFn = async.parallel;
       }
 
       asyncFn(fns, function (err) {
