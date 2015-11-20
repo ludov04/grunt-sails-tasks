@@ -43,7 +43,7 @@ module.exports = function(grunt) {
     }, function (err, sails) {
 
       if (err) {
-        grunt.fail.fatal('Could not lift sails', err);
+        grunt.fail.fatal('Could not lift sails: ' + err);
         return done();
       }
 
@@ -55,7 +55,7 @@ module.exports = function(grunt) {
 
       asyncFn(fns, function (err) {
         if (err) {
-          grunt.fail.fatal('An error occurred running the input functions', err);
+          grunt.fail.fatal('An error occurred running the input functions ' + err);
         }
 
         return done();
