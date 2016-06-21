@@ -32,12 +32,31 @@ module.exports = function(grunt) {
       if (sails.config) {
         return cb();
       }
+      var rc;
+      try {
+        rc = require('rc');
+      } catch (e0) {
+        try {
+          rc = require('sails/node_modules/rc');
+        } catch (e1) {
+          console.error('Could not find dependency: `rc`.');
+          console.error('Your `.sailsrc` file(s) will be ignored.');
+          console.error('To resolve this, run:');
+          console.error('npm install rc --save');
+          rc = function () { return {}; };
+        }
+      }
 
-      sails.lift(config, cb);
+      var loadedConfig = rc('sails');
+      loadedConfig.port = config.port;
+      loadedConfig.task = config.task;
+      loadedConfig.environment = config.environment;
+      // Start server
+      sails.lift(loadedConfig, cb);
     };
 
     liftSails({
-      port: -1,
+      port: 0,
       environment: grunt.option('env') || process.env.NODE_ENV,
       tasks: true
     }, function (err, sails) {
